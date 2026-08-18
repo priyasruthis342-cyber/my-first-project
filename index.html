@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery Expense Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: url('https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1000') no-repeat center center fixed;
+      background-size: cover;
+    }
+    
+    .app-card {
+      width: 100%;
+      max-width: 420px;
+      background: 
+        linear-gradient(135deg, rgba(255, 243, 230, 0.93), rgba(255, 224, 210, 0.93)),
+        url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600') center/cover no-repeat;
+      backdrop-filter: blur(8px);
+      border-radius: 25px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      padding: 22px;
+      box-sizing: border-box;
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    #screen1 {
+      text-align: center;
+      padding: 40px 10px;
+    }
+    
+    .btn-green {
+      background: linear-gradient(135deg, #2e7d32, #1b5e20);
+      color: white;
+      border: none;
+      padding: 14px;
+      width: 100%;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+    }
+    
+    .lang-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #ffb74d;
+      padding: 10px 18px;
+      margin: 5px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      color: #e65100;
+    }
+    .lang-btn.selected {
+      background: #e65100 !important;
+      color: #ffffff !important;
+      border-color: #bf360c !important;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.88);
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 14px;
+      border: 1px solid #ffe0b2;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .item-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-circle {
+      background: #2e7d32;
+      color: white;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+    }
+    .btn-delete {
+      background: #e53935;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    .clickable-card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 12px;
+      border-radius: 14px;
+      text-align: center;
+      margin-top: 10px;
+      cursor: pointer;
+      border: 2px dashed #ffb74d;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 10px;
+      border-radius: 16px;
+      margin-top: 10px;
+      border: 1px solid #ffe0b2;
+    }
+    .nav-item {
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+      color: #bf360c;
+      font-weight: bold;
+    }
+    .mic-btn {
+      background: #e65100;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-card">
+    <div>
+      <!-- 1. Language Selection Screen -->
+      <div id="screen1" class="screen active">
+        <div style="margin-top: 30px;">
+          <h2 style="color: #bf360c; margin: 5px 0;">Welcome to Your App 🌸</h2>
+          <p style="color: #4e342e; margin-bottom: 30px;">Please select your language</p>
+        </div>
+        <div style="margin: 30px 0;">
+          <button id="btnTa" class="lang-btn selected" onclick="selectLang('ta')">தமிழ் / Tamil</button>
+          <button id="btnTe" class="lang-btn" onclick="selectLang('te')">తెలుగు / Telugu</button>
+        </div>
+        <button class="btn-green" onclick="showScreen(2)">அடுத்து / Next ➔</button>
+      </div>
+
+      <!-- 2. Name Entry Screen -->
+      <div id="screen2" class="screen">
+        <h3 id="nameTitle" style="color:#bf360c;">உங்கள் பெயரை உள்ளிடவும்</h3>
+        <input type="text" id="userName" placeholder="பெயர் / Name" 
+               oninput="validateNameInput(this)" 
+               style="width: 90%; padding: 12px; border-radius: 10px; border: 1px solid #ffb74d; font-size: 16px; outline: none;">
+        <p id="nameError" style="color: red; font-size: 12px; display: none;">தயவுசெய்து பெயரை மட்டும் உள்ளிடவும்!</p>
+        <button class="btn-green" onclick="saveName()">அடுத்து / Next ➔</button>
+      </div>
+
+      <!-- 3. Main Dashboard -->
+      <div id="screen3" class="screen">
+        <h3 style="margin:0; color:#bf360c;" id="welcomeUser">வணக்கம்</h3>
+        <p id="dashTitle" style="color:#5d4037; font-size: 13px; margin-top: 2px;">இன்றைய பொருட்கள் 🌿</p>
+        
+        <div id="itemList" style="max-height: 250px; overflow-y: auto;"></div>
+
+        <!-- Custom Item Add Section -->
+        <div style="margin-top: 8px; display: flex; gap: 5px;">
+          <input type="text" id="customInput" placeholder="பொருள்..." style="flex:2; padding: 8px; border-radius: 8px; border: 1px solid #ffcc80; outline: none;">
+          <button class="mic-btn" onclick="startVoiceRecognition()" title="பேசி டைப் செய்ய">🎙️</button>
+          <input type="number" id="customPrice" placeholder="₹" style="width:50px; padding: 8px; border-radius: 8px; border: 1px solid #ffcc80; outline: none;">
+          <button onclick="addCustomItem()" style="background:#e65100; color:white; border:none; border-radius:8px; padding:0 12px; cursor:pointer; font-weight:bold;">+</button>
+        </div>
+
+        <!-- Clickable Today Total Card -->
+        <div class="clickable-card" onclick="openTodaySummary()">
+          <span id="totalText" style="color:#4e342e;">இன்றைய மொத்தம்:</span> 
+          <strong id="totalCount" style="font-size: 15px; color: #2e7d32;">0 பொருட்கள் (₹0)</strong>
+          <div id="subHint" style="font-size: 11px; color: #e65100; margin-top: 3px;">👆 கிளிக் செய்து இன்றைய சுருக்கம் பார்க்கவும்</div>
+        </div>
+      </div>
+
+      <!-- 4. Today Summary Page -->
+      <div id="screen4" class="screen">
+        <h3 style="color:#bf360c;" id="summaryTitle">இன்றைய வாங்கிய பொருட்கள் 💐</h3>
+        <div id="todaySummaryList" style="max-height: 320px; overflow-y: auto;"></div>
+        <button class="btn-green" id="backBtn" onclick="showScreen(3)">← முகப்புக்குச் செல்லவும்</button>
+      </div>
+
+      <!-- 5. History Screen -->
+      <div id="screen5" class="screen">
+        <h3 style="color:#bf360c;" id="historyTitle">செலவு வரலாறு (History) 📜</h3>
+        <div id="historyList" style="max-height: 340px; overflow-y: auto;"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="nav-bar" id="bottomNav" style="display:none;">
+      <div class="nav-item" onclick="showScreen(3)">🏠 <br><span id="navHome">முகப்பு</span></div>
+      <div class="nav-item" onclick="showHistoryFromCache()">📜 <br><span id="navHist">வரலாறு</span></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCU1vcQXXigmjkjGduxGWptn3repho1y_Y",
+      authDomain: "grocery-tracker-233c7.firebaseapp.com",
+      databaseURL: "https://grocery-tracker-233c7-default-rtdb.firebaseio.com",
+      projectId: "grocery-tracker-233c7",
+      storageBucket: "grocery-tracker-233c7.firebasestorage.app",
+      messagingSenderId: "908125654376",
+      appId: "1:908125654376:web:3d99de9d88991f0d32dadd",
+      measurementId: "G-H78BX024DJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    let currentLang = 'ta';
+    let userCart = {};
+    let name = localStorage.getItem('savedGroceryName') || ""; // ரெப்ரெஷ் ஆனாலும் பெயரைக் காப்பாற்றும்
+    let cachedHistoryData = {};
+
+    let defaultItems = [
+      { id: '1', ta: "வெங்காயம்", te: "ఉల్లిపాయలు", icon: "🧅", price: 40 },
+      { id: '2', ta: "தக்காளி", te: "టమాటా", icon: "🍅", price: 30 },
+      { id: '3', ta: "பச்சை மிளகாய்", te: "పచ్చిమిర్చి", icon: "🌶️", price: 15 },
+      { id: '4', ta: "சிக்கன்", te: "కోడిమాంసం", icon: "🍗", price: 220 }
+    ];
+
+    function validateNameInput(input) {
+      input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+    }
+
+    function selectLang(lang) {
+      currentLang = lang;
+      document.getElementById('btnTa').classList.toggle('selected', lang === 'ta');
+      document.getElementById('btnTe').classList.toggle('selected', lang === 'te');
+      
+      if(lang === 'ta') {
+        document.getElementById('nameTitle').innerText = "உங்கள் பெயரை உள்ளிடவும்";
+        document.getElementById('dashTitle').innerText = "இன்றைய பொருட்கள் 🌿";
+        document.getElementById('totalText').innerText = "இன்றைய மொத்தம்:";
+        document.getElementById('subHint').innerText = "👆 கிளிக் செய்து இன்றைய சுருக்கம் பார்க்கவும்";
+        document.getElementById('customInput').placeholder = "புதிய பொருள்...";
+        document.getElementById('navHome').innerText = "முகப்பு";
+        document.getElementById('navHist').innerText = "வரலாறு";
+        document.getElementById('historyTitle').innerText = "செலவு வரலாறு (History) 📜";
+        document.getElementById('summaryTitle').innerText = "இன்றைய வாங்கிய பொருட்கள் 💐";
+        document.getElementById('backBtn').innerText = "← முகப்புக்குச் செல்லவும்";
+      } else {
+        document.getElementById('nameTitle').innerText = "మీ పేరు నమోదు చేయండి";
+        document.getElementById('dashTitle').innerText = "ఈరోజు కొనుగోలు చేసినవి 🌿";
+        document.getElementById('totalText').innerText = "ఈరోజు మొత్తం:";
+        document.getElementById('subHint').innerText = "👆 ఈరోజు వివరాలు చూడటానికి క్లిక్ చేయండి";
+        document.getElementById('customInput').placeholder = "కొత్త వస్తువు...";
+        document.getElementById('navHome').innerText = "హోమ్";
+        document.getElementById('navHist').innerText = "చరిత్ర";
+        document.getElementById('historyTitle').innerText = "ఖర్చుల చరిత్ర (History) 📜";
+        document.getElementById('summaryTitle').innerText = "ఈరోజు కొనుగోలు చేసినవి 💐";
+        document.getElementById('backBtn').innerText = "← హోమ్‌కి వెళ్లండి";
+      }
+      renderItems();
+    }
+
+    function showScreen(num) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen' + num).classList.add('active');
+      if(num >= 3) {
+        document.getElementById('bottomNav').style.display = 'flex';
+      } else {
+        document.getElementById('bottomNav').style.display = 'none';
+      }
+    }
+
+    function saveName() {
+      let inputName = document.getElementById('userName').value.trim();
+      if(inputName === "") {
+        document.getElementById('nameError').style.display = 'block';
+        return;
+      }
+      document.getElementById('nameError').style.display = 'none';
+      
+      name = inputName;
+      localStorage.setItem('savedGroceryName', name); // பிரவுசரில் பெயரைச் சேமிக்கிறோம்
+
+      setupUserSession();
+    }
+
+    function setupUserSession() {
+      let displayName = name;
+      if(currentLang === 'te') {
+        if(name.toLowerCase() === 'priya') displayName = 'ప్రియ';
+        document.getElementById('welcomeUser').innerText = "నమస్కారం " + displayName;
+      } else {
+        document.getElementById('welcomeUser').innerText = "வணக்கம் " + displayName;
+      }
+
+      firebase.database().ref('users/' + name).update({
+        name: name,
+        lastActive: new Date().toISOString()
+      });
+
+      loadAllUserDataFromFirebase(() => {
+        showScreen(3);
+      });
+    }
+
+    function loadAllUserDataFromFirebase(callback) {
+      if (!name) {
+        if(callback) callback();
+        return;
+      }
+
+      // 1. Cart டேட்டாவை லோட் செய்தல்
+      firebase.database().ref('users/' + name + '/cart').once('value', (cartSnapshot) => {
+        let cartData = cartSnapshot.val();
+        if(cartData) {
+          userCart = cartData;
+          renderItems();
+        } else {
+          userCart = {};
+          renderItems();
+        }
+
+        // 2. History டேட்டாவை லோட் செய்தல்
+        firebase.database().ref('users/' + name + '/history').once('value', (histSnapshot) => {
+          cachedHistoryData = histSnapshot.val() || {};
+          if(callback) callback();
+        });
+      });
+    }
+
+    function saveCartAndHistoryToFirebase() {
+      if (!name) return;
+
+      firebase.database().ref('users/' + name + '/cart').set(userCart);
+
+      let today = new Date().toISOString().split('T')[0];
+      let historyPayload = {
+        cart: userCart,
+        updatedAt: new Date().toLocaleTimeString()
+      };
+
+      firebase.database().ref('users/' + name + '/history/' + today).set(historyPayload);
+      cachedHistoryData[today] = historyPayload;
+    }
+
+    function showHistoryFromCache() {
+      showScreen(5);
+      let hDiv = document.getElementById('historyList');
+      hDiv.innerHTML = "";
+      
+      let hasHistory = false;
+      let monthlyTotal = 0;
+
+      let sortedDates = Object.keys(cachedHistoryData || {}).sort().reverse();
+
+      for(let date of sortedDates) {
+        hasHistory = true;
+        let dayObj = cachedHistoryData[date];
+        let dayCart = dayObj.cart || dayObj;
+        let dayTotal = 0;
+        let dayItemsCount = 0;
+        let itemsDetailHTML = "";
+
+        for(let k in dayCart) {
+          let itemObj = dayCart[k];
+          if(itemObj && itemObj.qty > 0) {
+            let itemName = (currentLang === 'te') ? itemObj.item.te : itemObj.item.ta;
+            let cost = itemObj.item.price !== null ? itemObj.qty * itemObj.item.price : 0;
+            dayTotal += cost;
+            dayItemsCount += itemObj.qty;
+            let costText = itemObj.item.price !== null ? `₹${cost}` : 'விலை இல்லை';
+            itemsDetailHTML += `<div style="font-size:12px; color:#555;">• ${itemName} (${itemObj.qty}) - ${costText}</div>`;
+          }
+        }
+
+        monthlyTotal += dayTotal;
+
+        let totalItemsLabel = currentLang === 'ta' ? 'மொத்த பொருட்கள்:' : 'మొత్తం వస్తువులు:';
+
+        hDiv.innerHTML += `
+          <div style="background:rgba(255,255,255,0.92); border:1px solid #ffcc80; padding:12px; margin-bottom:12px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; color:#bf360c; margin-bottom:5px;">
+              <span>📅 ${date}</span>
+              <span style="color:#2e7d32;">₹${dayTotal}</span>
+            </div>
+            <div style="font-size:13px; font-weight:500; margin-bottom:5px; color:#333;">${totalItemsLabel} ${dayItemsCount}</div>
+            <hr style="border:0.5px solid #ffe0b2;">
+            ${itemsDetailHTML}
+          </div>
+        `;
+      }
+
+      if(!hasHistory) {
+        let noHistoryMsg = currentLang === 'ta' ? "வரலாறு எதுவும் இல்லை." : "చరిత్ర లేదు.";
+        hDiv.innerHTML = `<p style='text-align:center; color:#888;'>${noHistoryMsg}</p>`;
+      } else {
+        let monthTitle = currentLang === 'ta' ? "📊 இந்த மாத மொத்த செலவு:" : "📊 ఈ నెల మొత్తం ఖర్చు:";
+        hDiv.innerHTML = `
+          <div style="background:linear-gradient(135deg, #2e7d32, #1b5e20); color:white; padding:15px; border-radius:14px; text-align:center; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+            <div style="font-size:14px; font-weight:bold;">${monthTitle}</div>
+            <div style="font-size:22px; font-weight:bold; margin-top:5px;">₹${monthlyTotal}</div>
+          </div>
+        ` + hDiv.innerHTML;
+      }
+    }
+
+    function startVoiceRecognition() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert("உங்கள் பிரவுசரில் Voice Input வசதி இல்லை.");
+        return;
+      }
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.lang = currentLang === 'ta' ? 'ta-IN' : 'te-IN';
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('customInput').value = transcript;
+      };
+    }
+
+    function renderItems() {
+      const listDiv = document.getElementById('itemList');
+      listDiv.innerHTML = "";
+      defaultItems.forEach((item) => {
+        let itemName = currentLang === 'ta' ? item.ta : item.te;
+        let qty = userCart[item.id]?.qty || 0;
+        let priceDisplay = item.price !== null ? `₹${item.price}` : '';
+        
+        listDiv.innerHTML += `
+          <div class="item-row">
+            <div class="item-info">
+              <span>${item.icon}</span> 
+              <div>
+                <div>${itemName}</div>
+                <div style="font-size:12px; color:#777;">${priceDisplay}</div>
+              </div>
+            </div>
+            <div class="qty-controls">
+              <div class="btn-circle" onclick="updateQty('${item.id}', -1)">-</div>
+              <span style="font-weight:bold; color:#333;">${qty}</span>
+              <div class="btn-circle" onclick="updateQty('${item.id}', 1)">+</div>
+              <button class="btn-delete" onclick="deleteItem('${item.id}')">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+      calculateTotal();
+    }
+
+    function addCustomItem() {
+      let nameVal = document.getElementById('customInput').value.trim();
+      let priceVal = document.getElementById('customPrice').value;
+      let parsedPrice = priceVal !== "" ? parseFloat(priceVal) : null;
+
+      if(nameVal !== "") {
+        let newId = Date.now().toString();
+        defaultItems.push({ id: newId, ta: nameVal, te: nameVal, icon: "🛍️", price: parsedPrice });
+        renderItems();
+        document.getElementById('customInput').value = "";
+        document.getElementById('customPrice').value = "";
+      }
+    }
+
+    function deleteItem(id) {
+      defaultItems = defaultItems.filter(item => item.id !== id);
+      delete userCart[id];
+      renderItems();
+      saveCartAndHistoryToFirebase();
+    }
+
+    function updateQty(id, change) {
+      let item = defaultItems.find(i => i.id === id);
+      if(!userCart[id]) {
+        userCart[id] = { qty: 0, item: item };
+      }
+      userCart[id].qty += change;
+      if(userCart[id].qty <= 0) {
+        delete userCart[id];
+      }
+      renderItems();
+      saveCartAndHistoryToFirebase();
+    }
+
+    function calculateTotal() {
+      let totalQty = 0;
+      let totalPrice = 0;
+      for(let key in userCart) {
+        totalQty += userCart[key].qty;
+        if(userCart[key].item.price !== null) {
+          totalPrice += userCart[key].qty * userCart[key].item.price;
+        }
+      }
+      let itemUnitText = currentLang === 'ta' ? 'பொருட்கள்' : 'వస్తువులు';
+      document.getElementById('totalCount').innerText = `${totalQty} ${itemUnitText} (₹${totalPrice})`;
+    }
+
+    function openTodaySummary() {
+      showScreen(4);
+      let sDiv = document.getElementById('todaySummaryList');
+      sDiv.innerHTML = "";
+      let grandTotal = 0;
+      let hasItems = false;
+
+      for(let key in userCart) {
+        hasItems = true;
+        let cartItem = userCart[key];
+        if(cartItem.qty > 0) {
+          let itemName = currentLang === 'ta' ? cartItem.item.ta : cartItem.item.te;
+          let priceText = cartItem.item.price !== null ? `₹${cartItem.item.price} x ${cartItem.qty}` : `அளவு: ${cartItem.qty}`;
+          let itemTotal = cartItem.item.price !== null ? cartItem.qty * cartItem.item.price : 0;
+          grandTotal += itemTotal;
+
+          sDiv.innerHTML += `
+            <div class="item-row">
+              <div>
+                <strong>${cartItem.item.icon} ${itemName}</strong><br>
+                <span style="font-size:12px; color:#666;">${priceText}</span>
+              </div>
+              <strong style="color:#2e7d32;">${cartItem.item.price !== null ? '₹' + itemTotal : '-'}</strong>
+            </div>
+          `;
+        }
+      }
+
+      if(!hasItems) {
+        let emptyMsg = currentLang === 'ta' ? "இன்று பொருட்கள் எதுவும் சேர்க்கப்படவில்லை." : "ఈరోజు వస్తువులు ఏవీ జోడించబడలేదు.";
+        sDiv.innerHTML = `<p style='text-align:center; color:#888;'>${emptyMsg}</p>`;
+      } else {
+        let totalTitle = currentLang === 'ta' ? "மொத்தத் தொகை:" : "మొత్తం ధర:";
+        sDiv.innerHTML += `
+          <div style="background:rgba(255,255,255,0.9); padding:15px; border-radius:12px; text-align:center; margin-top:15px; border:1px solid #ffcc80;">
+            <h3>${totalTitle} <span style="color:#2e7d32;">₹${grandTotal}</span></h3>
+          </div>
+        `;
+      }
+    }
+
+    // ஆப் ஓபன் ஆகும்போதே ஏற்கனவே பெயர் சேமிக்கப்பட்டிருக்கிறதா எனச் சோதித்தல்
+    if (name !== "") {
+      setupUserSession();
+    } else {
+      showScreen(1);
+    }
+    
+    renderItems();
+  </script>
+</body>
+</html>
