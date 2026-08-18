@@ -38,9 +38,9 @@
     .screen { display: none; }
     .screen.active { display: block; }
 
-    #screen1 {
+    #screen1, #screen2 {
       text-align: center;
-      padding: 40px 10px;
+      padding: 20px 10px;
     }
     
     .btn-green {
@@ -89,20 +89,21 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       color: #333;
+      text-align: left;
     }
     .qty-controls {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .btn-circle {
       background: #2e7d32;
       color: white;
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       display: flex;
       justify-content: center;
@@ -110,16 +111,25 @@
       cursor: pointer;
       font-weight: bold;
       user-select: none;
+      font-size: 14px;
     }
     .btn-delete {
       background: #e53935;
       color: white;
       border: none;
       border-radius: 6px;
-      padding: 4px 8px;
+      padding: 4px 6px;
       cursor: pointer;
       font-size: 12px;
-      margin-left: 4px;
+    }
+    .price-bar {
+      width: 45px;
+      padding: 4px;
+      border: 1px solid #ffb74d;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 12px;
+      outline: none;
     }
 
     .clickable-card {
@@ -166,61 +176,64 @@
     <div>
       <!-- 1. Language Selection Screen -->
       <div id="screen1" class="screen active">
-        <div style="margin-top: 30px;">
-          <h2 style="color: #bf360c; margin: 5px 0;">Welcome to Your App 🌸</h2>
-          <p style="color: #4e342e; margin-bottom: 30px;">Please select your language</p>
+        <div style="margin-top: 20px;">
+          <h2 style="color: #bf360c; margin: 5px 0;">Grocery App 🌸</h2>
+          <p style="color: #4e342e; margin-bottom: 20px;">Please select your language</p>
         </div>
-        <div style="margin: 30px 0;">
+        <div style="margin: 20px 0;">
           <button id="btnTa" class="lang-btn selected" onclick="selectLang('ta')">தமிழ் / Tamil</button>
           <button id="btnTe" class="lang-btn" onclick="selectLang('te')">తెలుగు / Telugu</button>
         </div>
-        <button class="btn-green" onclick="showScreen(2)">அடுத்து / Next ➔</button>
+        <button class="btn-green" onclick="goToNameScreen()">அடுத்து / Next ➔</button>
       </div>
 
       <!-- 2. Name Entry Screen -->
       <div id="screen2" class="screen">
-        <h3 id="nameTitle" style="color:#bf360c;">உங்கள் பெயரை உள்ளிடவும்</h3>
-        <input type="text" id="userName" placeholder="பெயர் / Name" 
-               oninput="validateNameInput(this)" 
-               style="width: 90%; padding: 12px; border-radius: 10px; border: 1px solid #ffb74d; font-size: 16px; outline: none;">
-        <p id="nameError" style="color: red; font-size: 12px; display: none;">தயவுசெய்து பெயரை மட்டும் உள்ளிடவும்!</p>
-        <button class="btn-green" onclick="saveName()">அடுத்து / Next ➔</button>
+        <h3 id="nameTitle" style="color:#bf360c; margin-top: 30px;">உங்கள் பெயரை உள்ளிடவும்</h3>
+        <p style="font-size: 12px; color: #666;">(எ.கா: சுப்பிரமணி, பூர்ணா, அம்மா)</p>
+        <input type="text" id="userNameInput" placeholder="பெயர் / Name" 
+               style="width: 85%; padding: 12px; border-radius: 10px; border: 1px solid #ffb74d; font-size: 16px; outline: none; margin-top: 15px;">
+        <p id="nameError" style="color: red; font-size: 12px; display: none;">தயவுசெய்து பெயரை உள்ளிடவும்!</p>
+        <button class="btn-green" onclick="saveNameAndEnter()">உள்ளே செல்ல / Enter ➔</button>
       </div>
 
       <!-- 3. Main Dashboard -->
       <div id="screen3" class="screen">
-        <h3 style="margin:0; color:#bf360c;" id="welcomeUser">வணக்கம்</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin:0; color:#bf360c;" id="welcomeUser">வணக்கம்</h3>
+          <button onclick="logout()" style="font-size: 11px; background: #e53935; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer;" id="logoutBtn">மாற்று / Logout</button>
+        </div>
         <p id="dashTitle" style="color:#5d4037; font-size: 13px; margin-top: 2px;">இன்றைய பொருட்கள் 🌿</p>
         
-        <div id="itemList" style="max-height: 250px; overflow-y: auto;"></div>
+        <div id="itemList" style="max-height: 240px; overflow-y: auto;"></div>
 
         <!-- Custom Item Add Section -->
-        <div style="margin-top: 8px; display: flex; gap: 5px;">
-          <input type="text" id="customInput" placeholder="பொருள்..." style="flex:2; padding: 8px; border-radius: 8px; border: 1px solid #ffcc80; outline: none;">
+        <div style="margin-top: 8px; display: flex; gap: 4px;">
+          <input type="text" id="customInput" placeholder="பொருள்..." style="flex:2; padding: 7px; border-radius: 8px; border: 1px solid #ffcc80; outline: none; font-size: 13px;">
           <button class="mic-btn" onclick="startVoiceRecognition()" title="பேசி டைப் செய்ய">🎙️</button>
-          <input type="number" id="customPrice" placeholder="₹" style="width:50px; padding: 8px; border-radius: 8px; border: 1px solid #ffcc80; outline: none;">
-          <button onclick="addCustomItem()" style="background:#e65100; color:white; border:none; border-radius:8px; padding:0 12px; cursor:pointer; font-weight:bold;">+</button>
+          <input type="number" id="customPrice" placeholder="₹" style="width:40px; padding: 7px; border-radius: 8px; border: 1px solid #ffcc80; outline: none; font-size: 13px;">
+          <button onclick="addCustomItem()" style="background:#e65100; color:white; border:none; border-radius:8px; padding:0 10px; cursor:pointer; font-weight:bold;">+</button>
         </div>
 
         <!-- Clickable Today Total Card -->
         <div class="clickable-card" onclick="openTodaySummary()">
           <span id="totalText" style="color:#4e342e;">இன்றைய மொத்தம்:</span> 
-          <strong id="totalCount" style="font-size: 15px; color: #2e7d32;">0 பொருட்கள் (₹0)</strong>
-          <div id="subHint" style="font-size: 11px; color: #e65100; margin-top: 3px;">👆 கிளிக் செய்து இன்றைய சுருக்கம் பார்க்கவும்</div>
+          <strong id="totalCount" style="font-size: 14px; color: #2e7d32;">0 பொருட்கள் (₹0)</strong>
+          <div id="subHint" style="font-size: 11px; color: #e65100; margin-top: 2px;">👆 கிளிக் செய்து இன்றைய சுருக்கம் பார்க்கவும்</div>
         </div>
       </div>
 
       <!-- 4. Today Summary Page -->
       <div id="screen4" class="screen">
         <h3 style="color:#bf360c;" id="summaryTitle">இன்றைய வாங்கிய பொருட்கள் 💐</h3>
-        <div id="todaySummaryList" style="max-height: 320px; overflow-y: auto;"></div>
+        <div id="todaySummaryList" style="max-height: 310px; overflow-y: auto;"></div>
         <button class="btn-green" id="backBtn" onclick="showScreen(3)">← முகப்புக்குச் செல்லவும்</button>
       </div>
 
       <!-- 5. History Screen -->
       <div id="screen5" class="screen">
         <h3 style="color:#bf360c;" id="historyTitle">செலவு வரலாறு (History) 📜</h3>
-        <div id="historyList" style="max-height: 340px; overflow-y: auto;"></div>
+        <div id="historyList" style="max-height: 330px; overflow-y: auto;"></div>
       </div>
     </div>
 
@@ -249,7 +262,7 @@
 
     let currentLang = 'ta';
     let userCart = {};
-    let name = localStorage.getItem('savedGroceryName') || ""; // ரெப்ரெஷ் ஆனாலும் பெயரைக் காப்பாற்றும்
+    let currentUserName = localStorage.getItem('grocery_current_user') || ""; 
     let cachedHistoryData = {};
 
     let defaultItems = [
@@ -258,10 +271,6 @@
       { id: '3', ta: "பச்சை மிளகாய்", te: "పచ్చిమిర్చి", icon: "🌶️", price: 15 },
       { id: '4', ta: "சிக்கன்", te: "కోడిమాంసం", icon: "🍗", price: 220 }
     ];
-
-    function validateNameInput(input) {
-      input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
-    }
 
     function selectLang(lang) {
       currentLang = lang;
@@ -279,6 +288,7 @@
         document.getElementById('historyTitle').innerText = "செலவு வரலாறு (History) 📜";
         document.getElementById('summaryTitle').innerText = "இன்றைய வாங்கிய பொருட்கள் 💐";
         document.getElementById('backBtn').innerText = "← முகப்புக்குச் செல்லவும்";
+        document.getElementById('logoutBtn').innerText = "மாற்று";
       } else {
         document.getElementById('nameTitle').innerText = "మీ పేరు నమోదు చేయండి";
         document.getElementById('dashTitle').innerText = "ఈరోజు కొనుగోలు చేసినవి 🌿";
@@ -290,8 +300,8 @@
         document.getElementById('historyTitle').innerText = "ఖర్చుల చరిత్ర (History) 📜";
         document.getElementById('summaryTitle').innerText = "ఈరోజు కొనుగోలు చేసినవి 💐";
         document.getElementById('backBtn').innerText = "← హోమ్‌కి వెళ్లండి";
+        document.getElementById('logoutBtn').innerText = "మార్చు";
       }
-      renderItems();
     }
 
     function showScreen(num) {
@@ -304,31 +314,38 @@
       }
     }
 
-    function saveName() {
-      let inputName = document.getElementById('userName').value.trim();
-      if(inputName === "") {
+    function goToNameScreen() {
+      showScreen(2);
+    }
+
+    function saveNameAndEnter() {
+      let nameInput = document.getElementById('userNameInput').value.trim();
+      if(nameInput === "") {
         document.getElementById('nameError').style.display = 'block';
         return;
       }
       document.getElementById('nameError').style.display = 'none';
-      
-      name = inputName;
-      localStorage.setItem('savedGroceryName', name); // பிரவுசரில் பெயரைச் சேமிக்கிறோம்
-
+      currentUserName = nameInput;
+      localStorage.setItem('grocery_current_user', currentUserName);
       setupUserSession();
     }
 
+    function logout() {
+      localStorage.removeItem('grocery_current_user');
+      currentUserName = "";
+      document.getElementById('userNameInput').value = "";
+      showScreen(1);
+    }
+
     function setupUserSession() {
-      let displayName = name;
       if(currentLang === 'te') {
-        if(name.toLowerCase() === 'priya') displayName = 'ప్రియ';
-        document.getElementById('welcomeUser').innerText = "నమస్కారం " + displayName;
+        document.getElementById('welcomeUser').innerText = "నమస్కారం " + currentUserName;
       } else {
-        document.getElementById('welcomeUser').innerText = "வணக்கம் " + displayName;
+        document.getElementById('welcomeUser').innerText = "வணக்கம் " + currentUserName;
       }
 
-      firebase.database().ref('users/' + name).update({
-        name: name,
+      firebase.database().ref('users/' + currentUserName).update({
+        name: currentUserName,
         lastActive: new Date().toISOString()
       });
 
@@ -338,24 +355,12 @@
     }
 
     function loadAllUserDataFromFirebase(callback) {
-      if (!name) {
-        if(callback) callback();
-        return;
-      }
-
-      // 1. Cart டேட்டாவை லோட் செய்தல்
-      firebase.database().ref('users/' + name + '/cart').once('value', (cartSnapshot) => {
+      firebase.database().ref('users/' + currentUserName + '/cart').once('value', (cartSnapshot) => {
         let cartData = cartSnapshot.val();
-        if(cartData) {
-          userCart = cartData;
-          renderItems();
-        } else {
-          userCart = {};
-          renderItems();
-        }
+        userCart = cartData ? cartData : {};
+        renderItems();
 
-        // 2. History டேட்டாவை லோட் செய்தல்
-        firebase.database().ref('users/' + name + '/history').once('value', (histSnapshot) => {
+        firebase.database().ref('users/' + currentUserName + '/history').once('value', (histSnapshot) => {
           cachedHistoryData = histSnapshot.val() || {};
           if(callback) callback();
         });
@@ -363,9 +368,9 @@
     }
 
     function saveCartAndHistoryToFirebase() {
-      if (!name) return;
+      if (!currentUserName) return;
 
-      firebase.database().ref('users/' + name + '/cart').set(userCart);
+      firebase.database().ref('users/' + currentUserName + '/cart').set(userCart);
 
       let today = new Date().toISOString().split('T')[0];
       let historyPayload = {
@@ -373,7 +378,7 @@
         updatedAt: new Date().toLocaleTimeString()
       };
 
-      firebase.database().ref('users/' + name + '/history/' + today).set(historyPayload);
+      firebase.database().ref('users/' + currentUserName + '/history/' + today).set(historyPayload);
       cachedHistoryData[today] = historyPayload;
     }
 
@@ -384,7 +389,6 @@
       
       let hasHistory = false;
       let monthlyTotal = 0;
-
       let sortedDates = Object.keys(cachedHistoryData || {}).sort().reverse();
 
       for(let date of sortedDates) {
@@ -399,16 +403,15 @@
           let itemObj = dayCart[k];
           if(itemObj && itemObj.qty > 0) {
             let itemName = (currentLang === 'te') ? itemObj.item.te : itemObj.item.ta;
-            let cost = itemObj.item.price !== null ? itemObj.qty * itemObj.item.price : 0;
+            let itemPrice = itemObj.item.price !== null ? itemObj.item.price : 0;
+            let cost = itemObj.qty * itemPrice;
             dayTotal += cost;
             dayItemsCount += itemObj.qty;
-            let costText = itemObj.item.price !== null ? `₹${cost}` : 'விலை இல்லை';
-            itemsDetailHTML += `<div style="font-size:12px; color:#555;">• ${itemName} (${itemObj.qty}) - ${costText}</div>`;
+            itemsDetailHTML += `<div style="font-size:12px; color:#555;">• ${itemName} (${itemObj.qty}) - ₹${cost}</div>`;
           }
         }
 
         monthlyTotal += dayTotal;
-
         let totalItemsLabel = currentLang === 'ta' ? 'மொத்த பொருட்கள்:' : 'మొత్తం వస్తువులు:';
 
         hDiv.innerHTML += `
@@ -460,8 +463,9 @@
       listDiv.innerHTML = "";
       defaultItems.forEach((item) => {
         let itemName = currentLang === 'ta' ? item.ta : item.te;
-        let qty = userCart[item.id]?.qty || 0;
-        let priceDisplay = item.price !== null ? `₹${item.price}` : '';
+        let cartItem = userCart[item.id];
+        let qty = cartItem ? cartItem.qty : 0;
+        let currentPrice = (cartItem && cartItem.item && cartItem.item.price !== undefined) ? cartItem.item.price : item.price;
         
         listDiv.innerHTML += `
           <div class="item-row">
@@ -469,12 +473,12 @@
               <span>${item.icon}</span> 
               <div>
                 <div>${itemName}</div>
-                <div style="font-size:12px; color:#777;">${priceDisplay}</div>
               </div>
             </div>
             <div class="qty-controls">
+              <input type="number" class="price-bar" value="${currentPrice}" onchange="updateItemPrice('${item.id}', this.value)" title="விலையை மாற்ற">
               <div class="btn-circle" onclick="updateQty('${item.id}', -1)">-</div>
-              <span style="font-weight:bold; color:#333;">${qty}</span>
+              <span style="font-weight:bold; color:#333; min-width:15px; text-align:center;">${qty}</span>
               <div class="btn-circle" onclick="updateQty('${item.id}', 1)">+</div>
               <button class="btn-delete" onclick="deleteItem('${item.id}')">🗑️</button>
             </div>
@@ -484,15 +488,33 @@
       calculateTotal();
     }
 
+    function updateItemPrice(id, newPrice) {
+      let parsedPrice = newPrice !== "" ? parseFloat(newPrice) : 0;
+      let item = defaultItems.find(i => i.id === id);
+      
+      if(!userCart[id]) {
+        userCart[id] = { qty: 0, item: { ...item, price: parsedPrice } };
+      } else {
+        userCart[id].item.price = parsedPrice;
+      }
+      saveCartAndHistoryToFirebase();
+      calculateTotal();
+    }
+
     function addCustomItem() {
       let nameVal = document.getElementById('customInput').value.trim();
       let priceVal = document.getElementById('customPrice').value;
-      let parsedPrice = priceVal !== "" ? parseFloat(priceVal) : null;
+      let parsedPrice = priceVal !== "" ? parseFloat(priceVal) : 0;
 
       if(nameVal !== "") {
-        let newId = Date.now().toString();
-        defaultItems.push({ id: newId, ta: nameVal, te: nameVal, icon: "🛍️", price: parsedPrice });
+        let newId = 'custom_' + Date.now();
+        let newItem = { id: newId, ta: nameVal, te: nameVal, icon: "🛍️", price: parsedPrice };
+        defaultItems.push(newItem);
+        
+        userCart[newId] = { qty: 1, item: newItem };
+        
         renderItems();
+        saveCartAndHistoryToFirebase();
         document.getElementById('customInput').value = "";
         document.getElementById('customPrice').value = "";
       }
@@ -522,9 +544,10 @@
       let totalQty = 0;
       let totalPrice = 0;
       for(let key in userCart) {
-        totalQty += userCart[key].qty;
-        if(userCart[key].item.price !== null) {
-          totalPrice += userCart[key].qty * userCart[key].item.price;
+        if(userCart[key]) {
+          totalQty += userCart[key].qty;
+          let p = userCart[key].item && userCart[key].item.price !== undefined ? userCart[key].item.price : 0;
+          totalPrice += userCart[key].qty * p;
         }
       }
       let itemUnitText = currentLang === 'ta' ? 'பொருட்கள்' : 'వస్తువులు';
@@ -539,21 +562,21 @@
       let hasItems = false;
 
       for(let key in userCart) {
-        hasItems = true;
         let cartItem = userCart[key];
-        if(cartItem.qty > 0) {
-          let itemName = currentLang === 'ta' ? cartItem.item.ta : cartItem.item.te;
-          let priceText = cartItem.item.price !== null ? `₹${cartItem.item.price} x ${cartItem.qty}` : `அளவு: ${cartItem.qty}`;
-          let itemTotal = cartItem.item.price !== null ? cartItem.qty * cartItem.item.price : 0;
+        if(cartItem && cartItem.qty > 0) {
+          hasItems = true;
+          let itemName = (currentLang === 'ta') ? cartItem.item.ta : cartItem.item.te;
+          let itemPrice = cartItem.item.price !== undefined ? cartItem.item.price : 0;
+          let itemTotal = cartItem.qty * itemPrice;
           grandTotal += itemTotal;
 
           sDiv.innerHTML += `
             <div class="item-row">
               <div>
                 <strong>${cartItem.item.icon} ${itemName}</strong><br>
-                <span style="font-size:12px; color:#666;">${priceText}</span>
+                <span style="font-size:12px; color:#666;">₹${itemPrice} x ${cartItem.qty}</span>
               </div>
-              <strong style="color:#2e7d32;">${cartItem.item.price !== null ? '₹' + itemTotal : '-'}</strong>
+              <strong style="color:#2e7d32;">₹${itemTotal}</strong>
             </div>
           `;
         }
@@ -565,21 +588,22 @@
       } else {
         let totalTitle = currentLang === 'ta' ? "மொத்தத் தொகை:" : "మొత్తం ధర:";
         sDiv.innerHTML += `
-          <div style="background:rgba(255,255,255,0.9); padding:15px; border-radius:12px; text-align:center; margin-top:15px; border:1px solid #ffcc80;">
+          <style>
+            .summary-box { background: rgba(255,255,255,0.9); padding: 15px; border-radius: 12px; text-align: center; margin-top: 15px; border: 1px solid #ffcc80; }
+          </style>
+          <div class="summary-box">
             <h3>${totalTitle} <span style="color:#2e7d32;">₹${grandTotal}</span></h3>
           </div>
         `;
       }
     }
 
-    // ஆப் ஓபன் ஆகும்போதே ஏற்கனவே பெயர் சேமிக்கப்பட்டிருக்கிறதா எனச் சோதித்தல்
-    if (name !== "") {
+    // ஆப் ஸ்டார்ட் ஆகும் போது பெயர் ஏற்கனவே உள்ளதா என சரிபார்க்கும்
+    if (currentUserName !== "") {
       setupUserSession();
     } else {
       showScreen(1);
     }
-    
-    renderItems();
   </script>
 </body>
 </html>
