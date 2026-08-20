@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grocery Expense Tracker</title>
+  <title>Income & Expense Tracker</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,23 +12,24 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: url('https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1000') no-repeat center center fixed;
+      /* Groceries, household items & fruits background */
+      background: url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200') no-repeat center center fixed;
       background-size: cover;
     }
     
     .app-card {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       background: 
-        linear-gradient(135deg, rgba(255, 243, 230, 0.93), rgba(255, 224, 210, 0.93)),
+        linear-gradient(135deg, rgba(224, 247, 250, 0.95), rgba(252, 228, 236, 0.95), rgba(232, 245, 233, 0.95)),
         url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600') center/cover no-repeat;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       border-radius: 25px;
-      border: 2px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      padding: 22px;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      padding: 20px;
       box-sizing: border-box;
-      min-height: 620px;
+      min-height: 650px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -40,133 +41,135 @@
 
     #screen1, #screen2 {
       text-align: center;
-      padding: 20px 10px;
+      padding: 15px 10px;
     }
     
     .btn-green {
-      background: linear-gradient(135deg, #2e7d32, #1b5e20);
+      background: linear-gradient(135deg, #1b5e20, #004d40);
       color: white;
       border: none;
       padding: 14px;
       width: 100%;
       border-radius: 12px;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 800;
       cursor: pointer;
       margin-top: 15px;
-      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     
     .lang-btn {
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px solid #ffb74d;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid #00acc1;
       padding: 10px 18px;
       margin: 5px;
       border-radius: 12px;
       cursor: pointer;
       font-size: 15px;
-      font-weight: bold;
-      color: #e65100;
+      font-weight: 800;
+      color: #006064;
     }
     .lang-btn.selected {
-      background: #e65100 !important;
+      background: #006064 !important;
       color: #ffffff !important;
-      border-color: #bf360c !important;
+      border-color: #00363a !important;
     }
 
-    .item-row {
+    .main-summary-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid #81c784;
+      padding: 15px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .section-container {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1.5px solid #b2dfdb;
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .transaction-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255, 255, 255, 0.88);
+      background: #ffffff;
       padding: 10px 12px;
-      margin-bottom: 8px;
-      border-radius: 14px;
-      border: 1px solid #ffe0b2;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    }
-    .item-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-      text-align: left;
-    }
-    .qty-controls {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .btn-circle {
-      background: #2e7d32;
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      font-weight: bold;
-      user-select: none;
-      font-size: 14px;
-    }
-    .btn-delete {
-      background: #e53935;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 4px 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .price-bar {
-      width: 45px;
-      padding: 4px;
-      border: 1px solid #ffb74d;
-      border-radius: 6px;
-      text-align: center;
-      font-size: 12px;
-      outline: none;
-    }
-
-    .clickable-card {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 12px;
-      border-radius: 14px;
-      text-align: center;
-      margin-top: 10px;
-      cursor: pointer;
-      border: 2px dashed #ffb74d;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid #b2dfdb;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
 
     .nav-bar {
       display: flex;
       justify-content: space-around;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.92);
       padding: 10px;
       border-radius: 16px;
       margin-top: 10px;
-      border: 1px solid #ffe0b2;
+      border: 1px solid #b2dfdb;
     }
     .nav-item {
       cursor: pointer;
-      font-size: 12px;
+      font-size: 13px;
       text-align: center;
-      color: #bf360c;
-      font-weight: bold;
+      color: #006064;
+      font-weight: 800;
+    }
+    .input-group {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1.5px solid #80deea;
+      outline: none;
+      font-size: 14px;
+      font-weight: 700;
+      color: #111;
+      box-sizing: border-box;
     }
     .mic-btn {
-      background: #e65100;
+      background: #00838f;
       color: white;
       border: none;
       border-radius: 8px;
-      padding: 0 10px;
+      padding: 8px 12px;
       cursor: pointer;
       font-size: 16px;
+      font-weight: bold;
+    }
+    .btn-add {
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 800;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .btn-delete {
+      background: #ffebee;
+      color: #c62828;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -176,71 +179,94 @@
     <div>
       <!-- 1. Language Selection Screen -->
       <div id="screen1" class="screen active">
-        <div style="margin-top: 20px;">
-          <h2 style="color: #bf360c; margin: 5px 0;">Grocery App 🌸</h2>
-          <p style="color: #4e342e; margin-bottom: 20px;">Please select your language</p>
+        <div style="margin-top: 10px;">
+          <h2 id="mainTitle" style="color: #004d40; margin: 5px 0; font-weight: 900; font-size: 22px;">வரவு செலவு கணக்கு 🌸</h2>
+          <p id="langSubText" style="color: #212121; margin-bottom: 15px; font-weight: 700; font-size: 14px;">உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</p>
         </div>
-        <div style="margin: 20px 0;">
+        <div style="margin: 15px 0;">
           <button id="btnTa" class="lang-btn selected" onclick="selectLang('ta')">தமிழ் / Tamil</button>
           <button id="btnTe" class="lang-btn" onclick="selectLang('te')">తెలుగు / Telugu</button>
         </div>
         <button class="btn-green" onclick="goToNameScreen()">அடுத்து / Next ➔</button>
+
+        <!-- Decorative Card Footer Section -->
+        <div style="margin-top: 25px; padding: 12px; background: rgba(255,255,255,0.8); border-radius: 14px; border: 1px dashed #00838f;">
+          <div style="font-size: 13px; font-weight: 800; color: #006064;" id="welcomeQuote">🌿 வரவு மற்றும் செலவுகளை எளிதாக நிர்வகிக்கவும்</div>
+          <div style="font-size: 11px; font-weight: 700; color: #555; margin-top: 4px;" id="welcomeSubQuote">மளிகை, காய்கறிகள் மற்றும் இதர வரவு செலவுகள்</div>
+        </div>
       </div>
 
       <!-- 2. Name Entry Screen -->
       <div id="screen2" class="screen">
-        <h3 id="nameTitle" style="color:#bf360c; margin-top: 30px;">உங்கள் பெயரை உள்ளிடவும்</h3>
-        <p style="font-size: 12px; color: #666;">(எ.கா: சுப்பிரமணி, பூர்ணா, அம்மா)</p>
+        <h3 id="nameTitle" style="color:#004d40; margin-top: 30px; font-weight: 900;">உங்கள் பெயரை உள்ளிடவும்</h3>
+        <p id="nameSubText" style="font-size: 13px; color: #333; font-weight: 700;">(எ.கா: சுப்பிரமணி, பூர்ணா, அம்மா)</p>
         <input type="text" id="userNameInput" placeholder="பெயர் / Name" 
-               style="width: 85%; padding: 12px; border-radius: 10px; border: 1px solid #ffb74d; font-size: 16px; outline: none; margin-top: 15px;">
-        <p id="nameError" style="color: red; font-size: 12px; display: none;">தயவுசெய்து பெயரை உள்ளிடவும்!</p>
+               style="width: 85%; padding: 12px; border-radius: 10px; border: 2px solid #00838f; font-size: 16px; font-weight: 700; outline: none; margin-top: 15px;">
+        <p id="nameError" style="color: #d32f2f; font-size: 13px; font-weight: 800; display: none;">தயவுசெய்து பெயரை உள்ளிடவும்!</p>
         <button class="btn-green" onclick="saveNameAndEnter()">உள்ளே செல்ல / Enter ➔</button>
       </div>
 
-      <!-- 3. Main Dashboard -->
+      <!-- 3. Main Dashboard (Income & Expense) -->
       <div id="screen3" class="screen">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin:0; color:#bf360c;" id="welcomeUser">வணக்கம்</h3>
-          <button onclick="logout()" style="font-size: 11px; background: #e53935; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer;" id="logoutBtn">மாற்று / Logout</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+          <h3 style="margin:0; color:#004d40; font-size: 17px; font-weight: 900;" id="welcomeUser">வணக்கம்</h3>
+          <button onclick="logout()" style="font-size: 12px; font-weight: 800; background: #c62828; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer;" id="logoutBtn">மாற்று / Logout</button>
         </div>
-        <p id="dashTitle" style="color:#5d4037; font-size: 13px; margin-top: 2px;">இன்றைய பொருட்கள் 🌿</p>
         
-        <div id="itemList" style="max-height: 240px; overflow-y: auto;"></div>
+        <div style="max-height: 480px; overflow-y: auto; padding-right: 2px;">
+          
+          <!-- Top Overall Summary Card -->
+          <div class="main-summary-card">
+            <div style="font-size: 13px; color: #212121; font-weight: 800;" id="lblTotalBalance">மீதமுள்ள மொத்தத் தொகை</div>
+            <div style="font-size: 24px; font-weight: 900; color: #1b5e20; margin-top: 3px;" id="grandBalanceDisplay">₹0</div>
+          </div>
 
-        <!-- Custom Item Add Section -->
-        <div style="margin-top: 8px; display: flex; gap: 4px;">
-          <input type="text" id="customInput" placeholder="பொருள்..." style="flex:2; padding: 7px; border-radius: 8px; border: 1px solid #ffcc80; outline: none; font-size: 13px;">
-          <button class="mic-btn" onclick="startVoiceRecognition()" title="பேசி டைப் செய்ய">🎙️</button>
-          <input type="number" id="customPrice" placeholder="₹" style="width:40px; padding: 7px; border-radius: 8px; border: 1px solid #ffcc80; outline: none; font-size: 13px;">
-          <button onclick="addCustomItem()" style="background:#e65100; color:white; border:none; border-radius:8px; padding:0 10px; cursor:pointer; font-weight:bold;">+</button>
-        </div>
+          <!-- Income Section (வரவு / రాబడి) -->
+          <div class="section-container" style="border-top: 5px solid #2e7d32;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="color: #1b5e20; font-size: 15px; font-weight: 900;" id="lblIncomeTitle">📥 வரவு (Income)</strong>
+              <span style="color: #1b5e20; font-weight: 900; font-size: 14px;" id="totalIncomeDisplay">₹0</span>
+            </div>
+            <div class="input-group">
+              <input type="text" id="incomeDesc" class="input-field" placeholder="வரவு விவரம்...">
+              <button class="mic-btn" onclick="startVoiceRecognition('incomeDesc')" title="பேசி டைப் செய்ய">🎙️</button>
+            </div>
+            <input type="number" id="incomeAmount" class="input-field" placeholder="தொகை (₹)...">
+            <button class="btn-add" style="background: linear-gradient(135deg, #2e7d32, #1b5e20);" onclick="addTransaction('income')" id="btnAddIncome">+ வரவு சேர்க்க</button>
+            
+            <div id="incomeList" style="margin-top: 10px;"></div>
+          </div>
 
-        <!-- Clickable Today Total Card -->
-        <div class="clickable-card" onclick="openTodaySummary()">
-          <span id="totalText" style="color:#4e342e;">இன்றைய மொத்தம்:</span> 
-          <strong id="totalCount" style="font-size: 14px; color: #2e7d32;">0 பொருட்கள் (₹0)</strong>
-          <div id="subHint" style="font-size: 11px; color: #e65100; margin-top: 2px;">👆 கிளிக் செய்து இன்றைய சுருக்கம் பார்க்கவும்</div>
+          <!-- Expense Section (செலவு / ఖర్చు) -->
+          <div class="section-container" style="border-top: 5px solid #c62828;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="color: #c62828; font-size: 15px; font-weight: 900;" id="lblExpenseTitle">📤 செலவு (Expense)</strong>
+              <span style="color: #c62828; font-weight: 900; font-size: 14px;" id="totalExpenseDisplay">₹0</span>
+            </div>
+            <div class="input-group">
+              <input type="text" id="expenseDesc" class="input-field" placeholder="செலவு விவரம்...">
+              <button class="mic-btn" style="background: #c62828;" onclick="startVoiceRecognition('expenseDesc')" title="பேசி டைப் செய்ய">🎙️</button>
+            </div>
+            <input type="number" id="expenseAmount" class="input-field" placeholder="தொகை (₹)...">
+            <button class="btn-add" style="background: linear-gradient(135deg, #e53935, #c62828);" onclick="addTransaction('expense')" id="btnAddExpense">+ செலவு சேர்க்க</button>
+            
+            <div id="expenseList" style="margin-top: 10px;"></div>
+          </div>
+
         </div>
       </div>
 
-      <!-- 4. Today Summary Page -->
+      <!-- 4. History Screen -->
       <div id="screen4" class="screen">
-        <h3 style="color:#bf360c;" id="summaryTitle">இன்றைய வாங்கிய பொருட்கள் 💐</h3>
-        <div id="todaySummaryList" style="max-height: 310px; overflow-y: auto;"></div>
-        <button class="btn-green" id="backBtn" onclick="showScreen(3)">← முகப்புக்குச் செல்லவும்</button>
-      </div>
-
-      <!-- 5. History Screen -->
-      <div id="screen5" class="screen">
-        <h3 style="color:#bf360c;" id="historyTitle">செலவு வரலாறு (History) 📜</h3>
-        <div id="historyList" style="max-height: 330px; overflow-y: auto;"></div>
+        <h3 style="color:#004d40; font-weight: 900;" id="historyTitle">செலவு வரலாறு (History) 📜</h3>
+        <div id="historyList" style="max-height: 450px; overflow-y: auto;"></div>
       </div>
     </div>
 
     <!-- Bottom Navigation Bar -->
     <div class="nav-bar" id="bottomNav" style="display:none;">
       <div class="nav-item" onclick="showScreen(3)">🏠 <br><span id="navHome">முகப்பு</span></div>
-      <div class="nav-item" onclick="showHistoryFromCache()">📜 <br><span id="navHist">வரலாறு</span></div>
+      <div class="nav-item" onclick="showHistory()">📜 <br><span id="navHist">வரலாறு</span></div>
     </div>
   </div>
 
@@ -261,16 +287,8 @@
     const database = firebase.database();
 
     let currentLang = 'ta';
-    let userCart = {};
     let currentUserName = localStorage.getItem('grocery_current_user') || ""; 
-    let cachedHistoryData = {};
-
-    let defaultItems = [
-      { id: '1', ta: "வெங்காயம்", te: "ఉల్లిపాయలు", icon: "🧅", price: 40 },
-      { id: '2', ta: "தக்காளி", te: "టమాటా", icon: "🍅", price: 30 },
-      { id: '3', ta: "பச்சை மிளகாய்", te: "పచ్చిమిర్చి", icon: "🌶️", price: 15 },
-      { id: '4', ta: "சிக்கன்", te: "కోడిమాంసం", icon: "🍗", price: 220 }
-    ];
+    let transactions = [];
 
     function selectLang(lang) {
       currentLang = lang;
@@ -278,30 +296,47 @@
       document.getElementById('btnTe').classList.toggle('selected', lang === 'te');
       
       if(lang === 'ta') {
+        document.getElementById('mainTitle').innerText = "வரவு செலவு கணக்கு 🌸";
+        document.getElementById('langSubText').innerText = "உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்";
+        document.getElementById('welcomeQuote').innerText = "🌿 வரவு மற்றும் செலவுகளை எளிதாக நிர்வகிக்கவும்";
+        document.getElementById('welcomeSubQuote').innerText = "மளிகை, காய்கறிகள் மற்றும் இதர வரவு செலவுகள்";
         document.getElementById('nameTitle').innerText = "உங்கள் பெயரை உள்ளிடவும்";
-        document.getElementById('dashTitle').innerText = "இன்றைய பொருட்கள் 🌿";
-        document.getElementById('totalText').innerText = "இன்றைய மொத்தம்:";
-        document.getElementById('subHint').innerText = "👆 கிளிக் செய்து இன்றைய சுருக்கம் பார்க்கவும்";
-        document.getElementById('customInput').placeholder = "புதிய பொருள்...";
+        document.getElementById('nameSubText').innerText = "(எ.கா: சுப்பிரமணி, பூர்ணா, அம்மா)";
+        document.getElementById('lblTotalBalance').innerText = "மீதமுள்ள மொத்தத் தொகை";
+        document.getElementById('lblIncomeTitle').innerText = "📥 வரவு (Income)";
+        document.getElementById('lblExpenseTitle').innerText = "📤 செலவு (Expense)";
+        document.getElementById('incomeDesc').placeholder = "வரவு விவரம் (எ.கா: சம்பளம்)...";
+        document.getElementById('incomeAmount').placeholder = "தொகை (₹)...";
+        document.getElementById('btnAddIncome').innerText = "+ வரவு சேர்க்க";
+        document.getElementById('expenseDesc').placeholder = "செலவு விவரம் (எ.கா: மளிகை)...";
+        document.getElementById('expenseAmount').placeholder = "தொகை (₹)...";
+        document.getElementById('btnAddExpense').innerText = "+ செலவு சேர்க்க";
         document.getElementById('navHome').innerText = "முகப்பு";
         document.getElementById('navHist').innerText = "வரலாறு";
         document.getElementById('historyTitle').innerText = "செலவு வரலாறு (History) 📜";
-        document.getElementById('summaryTitle').innerText = "இன்றைய வாங்கிய பொருட்கள் 💐";
-        document.getElementById('backBtn').innerText = "← முகப்புக்குச் செல்லவும்";
-        document.getElementById('logoutBtn').innerText = "மாற்று";
+        document.getElementById('logoutBtn').innerText = "மாற்று / Logout";
       } else {
+        document.getElementById('mainTitle').innerText = "வரவு செலவு ఖాతా 🌸";
+        document.getElementById('langSubText').innerText = "మీ భాషను ఎంచుకోండి";
+        document.getElementById('welcomeQuote').innerText = "🌿 రాబడులు మరియు ఖర్చులను సులభంగా నిర్వహించండి";
+        document.getElementById('welcomeSubQuote').innerText = "కిరాణా, కూరగాయలు మరియు ఇతర ఖర్చులు";
         document.getElementById('nameTitle').innerText = "మీ పేరు నమోదు చేయండి";
-        document.getElementById('dashTitle').innerText = "ఈరోజు కొనుగోలు చేసినవి 🌿";
-        document.getElementById('totalText').innerText = "ఈరోజు మొత్తం:";
-        document.getElementById('subHint').innerText = "👆 ఈరోజు వివరాలు చూడటానికి క్లిక్ చేయండి";
-        document.getElementById('customInput').placeholder = "కొత్త వస్తువు...";
+        document.getElementById('nameSubText').innerText = "(ఉదా: సుబ్రహ్మణ్యం, పూర్ణ, అమ్మ)";
+        document.getElementById('lblTotalBalance').innerText = "మొత్తం మిగిలిన మొత్తం";
+        document.getElementById('lblIncomeTitle').innerText = "📥 రాబడి (Income)";
+        document.getElementById('lblExpenseTitle').innerText = "📤 ఖర్చు (Expense)";
+        document.getElementById('incomeDesc').placeholder = "రాబడి వివరಣೆ (ఉదా: జీతం)...";
+        document.getElementById('incomeAmount').placeholder = "మొత్తం (₹)...";
+        document.getElementById('btnAddIncome').innerText = "+ రాబడి జోడించు";
+        document.getElementById('expenseDesc').placeholder = "ఖర్చు ವಿವರಣೆ (ఉదా: కిరాణా)...";
+        document.getElementById('expenseAmount').placeholder = "మొత్తం (₹)...";
+        document.getElementById('btnAddExpense').innerText = "+ ఖర్చు జోడించు";
         document.getElementById('navHome').innerText = "హోమ్";
         document.getElementById('navHist').innerText = "చరిత్ర";
         document.getElementById('historyTitle').innerText = "ఖర్చుల చరిత్ర (History) 📜";
-        document.getElementById('summaryTitle').innerText = "ఈరోజు కొనుగోలు చేసినవి 💐";
-        document.getElementById('backBtn').innerText = "← హోమ్‌కి వెళ్లండి";
-        document.getElementById('logoutBtn').innerText = "మార్చు";
+        document.getElementById('logoutBtn').innerText = "మార్చు / Logout";
       }
+      renderDashboard();
     }
 
     function showScreen(num) {
@@ -349,101 +384,28 @@
         lastActive: new Date().toISOString()
       });
 
-      loadAllUserDataFromFirebase(() => {
+      loadDataFromFirebase(() => {
         showScreen(3);
       });
     }
 
-    function loadAllUserDataFromFirebase(callback) {
-      firebase.database().ref('users/' + currentUserName + '/cart').once('value', (cartSnapshot) => {
-        let cartData = cartSnapshot.val();
-        userCart = cartData ? cartData : {};
-        renderItems();
-
-        firebase.database().ref('users/' + currentUserName + '/history').once('value', (histSnapshot) => {
-          cachedHistoryData = histSnapshot.val() || {};
-          if(callback) callback();
-        });
+    function loadDataFromFirebase(callback) {
+      firebase.database().ref('users/' + currentUserName + '/transactions').once('value', (snapshot) => {
+        let data = snapshot.val();
+        transactions = data ? Object.values(data) : [];
+        renderDashboard();
+        if(callback) callback();
       });
     }
 
-    function saveCartAndHistoryToFirebase() {
+    function saveDataToFirebase() {
       if (!currentUserName) return;
-
-      firebase.database().ref('users/' + currentUserName + '/cart').set(userCart);
-
-      let today = new Date().toISOString().split('T')[0];
-      let historyPayload = {
-        cart: userCart,
-        updatedAt: new Date().toLocaleTimeString()
-      };
-
-      firebase.database().ref('users/' + currentUserName + '/history/' + today).set(historyPayload);
-      cachedHistoryData[today] = historyPayload;
+      firebase.database().ref('users/' + currentUserName + '/transactions').set(transactions);
     }
 
-    function showHistoryFromCache() {
-      showScreen(5);
-      let hDiv = document.getElementById('historyList');
-      hDiv.innerHTML = "";
-      
-      let hasHistory = false;
-      let monthlyTotal = 0;
-      let sortedDates = Object.keys(cachedHistoryData || {}).sort().reverse();
-
-      for(let date of sortedDates) {
-        hasHistory = true;
-        let dayObj = cachedHistoryData[date];
-        let dayCart = dayObj.cart || dayObj;
-        let dayTotal = 0;
-        let dayItemsCount = 0;
-        let itemsDetailHTML = "";
-
-        for(let k in dayCart) {
-          let itemObj = dayCart[k];
-          if(itemObj && itemObj.qty > 0) {
-            let itemName = (currentLang === 'te') ? itemObj.item.te : itemObj.item.ta;
-            let itemPrice = itemObj.item.price !== null ? itemObj.item.price : 0;
-            let cost = itemObj.qty * itemPrice;
-            dayTotal += cost;
-            dayItemsCount += itemObj.qty;
-            itemsDetailHTML += `<div style="font-size:12px; color:#555;">• ${itemName} (${itemObj.qty}) - ₹${cost}</div>`;
-          }
-        }
-
-        monthlyTotal += dayTotal;
-        let totalItemsLabel = currentLang === 'ta' ? 'மொத்த பொருட்கள்:' : 'మొత్తం వస్తువులు:';
-
-        hDiv.innerHTML += `
-          <div style="background:rgba(255,255,255,0.92); border:1px solid #ffcc80; padding:12px; margin-bottom:12px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-            <div style="display:flex; justify-content:space-between; font-weight:bold; color:#bf360c; margin-bottom:5px;">
-              <span>📅 ${date}</span>
-              <span style="color:#2e7d32;">₹${dayTotal}</span>
-            </div>
-            <div style="font-size:13px; font-weight:500; margin-bottom:5px; color:#333;">${totalItemsLabel} ${dayItemsCount}</div>
-            <hr style="border:0.5px solid #ffe0b2;">
-            ${itemsDetailHTML}
-          </div>
-        `;
-      }
-
-      if(!hasHistory) {
-        let noHistoryMsg = currentLang === 'ta' ? "வரலாறு எதுவும் இல்லை." : "చరిత్ర లేదు.";
-        hDiv.innerHTML = `<p style='text-align:center; color:#888;'>${noHistoryMsg}</p>`;
-      } else {
-        let monthTitle = currentLang === 'ta' ? "📊 இந்த மாத மொத்த செலவு:" : "📊 ఈ నెల మొత్తం ఖర్చు:";
-        hDiv.innerHTML = `
-          <div style="background:linear-gradient(135deg, #2e7d32, #1b5e20); color:white; padding:15px; border-radius:14px; text-align:center; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-            <div style="font-size:14px; font-weight:bold;">${monthTitle}</div>
-            <div style="font-size:22px; font-weight:bold; margin-top:5px;">₹${monthlyTotal}</div>
-          </div>
-        ` + hDiv.innerHTML;
-      }
-    }
-
-    function startVoiceRecognition() {
+    function startVoiceRecognition(inputId) {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert("உங்கள் பிரவுசரில் Voice Input வசதி இல்லை.");
+        alert(currentLang === 'ta' ? "உங்கள் பிரவுசரில் Voice Input வசதி இல்லை." : "మీ బ్రౌజర్‌లో వాయిస్ ఇన్‌పుట్ సౌకర్యం లేదు.");
         return;
       }
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -454,151 +416,128 @@
 
       recognition.onresult = function(event) {
         const transcript = event.results[0][0].transcript;
-        document.getElementById('customInput').value = transcript;
+        document.getElementById(inputId).value = transcript;
       };
     }
 
-    function renderItems() {
-      const listDiv = document.getElementById('itemList');
-      listDiv.innerHTML = "";
-      defaultItems.forEach((item) => {
-        let itemName = currentLang === 'ta' ? item.ta : item.te;
-        let cartItem = userCart[item.id];
-        let qty = cartItem ? cartItem.qty : 0;
-        let currentPrice = (cartItem && cartItem.item && cartItem.item.price !== undefined) ? cartItem.item.price : item.price;
-        
-        listDiv.innerHTML += `
-          <div class="item-row">
-            <div class="item-info">
-              <span>${item.icon}</span> 
-              <div>
-                <div>${itemName}</div>
-              </div>
+    function addTransaction(type) {
+      let descInput = document.getElementById(type + 'Desc');
+      let amountInput = document.getElementById(type + 'Amount');
+      
+      let desc = descInput.value.trim();
+      let amount = parseFloat(amountInput.value);
+
+      if(desc === "" || isNaN(amount) || amount <= 0) {
+        alert(currentLang === 'ta' ? "தயவுசெய்து சரியான விவரம் மற்றும் தொகையை உள்ளிடவும்." : "దయచేసి సరైన ವಿವರಣೆ మరియు మొత్తాన్ని నమోదు చేయండి.");
+        return;
+      }
+
+      let now = new Date();
+      let dateStr = now.toISOString().split('T')[0];
+      let timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      let newTx = {
+        id: 'tx_' + Date.now(),
+        type: type, 
+        desc: desc,
+        amount: amount,
+        date: dateStr,
+        time: timeStr
+      };
+
+      transactions.push(newTx);
+      saveDataToFirebase();
+      renderDashboard();
+
+      descInput.value = "";
+      amountInput.value = "";
+    }
+
+    function deleteTransaction(id) {
+      transactions = transactions.filter(t => t.id !== id);
+      saveDataToFirebase();
+      renderDashboard();
+    }
+
+    function renderDashboard() {
+      let incomeListDiv = document.getElementById('incomeList');
+      let expenseListDiv = document.getElementById('expenseList');
+      
+      incomeListDiv.innerHTML = "";
+      expenseListDiv.innerHTML = "";
+
+      let totalIncome = 0;
+      let totalExpense = 0;
+
+      transactions.forEach(t => {
+        let isIncome = t.type === 'income';
+
+        let rowHTML = `
+          <div class="transaction-row">
+            <div>
+              <div style="font-weight:800; font-size:13px; color:#111;">${t.desc}</div>
+              <div style="font-size:11px; color:#555; font-weight:700;">${t.date} • ${t.time}</div>
             </div>
-            <div class="qty-controls">
-              <input type="number" class="price-bar" value="${currentPrice}" onchange="updateItemPrice('${item.id}', this.value)" title="விலையை மாற்ற">
-              <div class="btn-circle" onclick="updateQty('${item.id}', -1)">-</div>
-              <span style="font-weight:bold; color:#333; min-width:15px; text-align:center;">${qty}</span>
-              <div class="btn-circle" onclick="updateQty('${item.id}', 1)">+</div>
-              <button class="btn-delete" onclick="deleteItem('${item.id}')">🗑️</button>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <strong style="color: ${isIncome ? '#1b5e20' : '#c62828'}; font-size:13px; font-weight:900;">
+                ${isIncome ? '+' : '-'}₹${t.amount}
+              </strong>
+              <button class="btn-delete" onclick="deleteTransaction('${t.id}')">🗑️</button>
             </div>
+          </div>
+        `;
+
+        if(isIncome) {
+          totalIncome += t.amount;
+          incomeListDiv.innerHTML += rowHTML;
+        } else {
+          totalExpense += t.amount;
+          expenseListDiv.innerHTML += rowHTML;
+        }
+      });
+
+      let netBalance = totalIncome - totalExpense;
+
+      document.getElementById('totalIncomeDisplay').innerText = `₹${totalIncome}`;
+      document.getElementById('totalExpenseDisplay').innerText = `₹${totalExpense}`;
+      document.getElementById('grandBalanceDisplay').innerText = `₹${netBalance}`;
+    }
+
+    function showHistory() {
+      showScreen(4);
+      let hDiv = document.getElementById('historyList');
+      hDiv.innerHTML = "";
+
+      if(transactions.length === 0) {
+        let noMsg = currentLang === 'ta' ? "வரலாறு எதுவும் இல்லை." : "చరిత్ర లేదు.";
+        hDiv.innerHTML = `<p style='text-align:center; color:#555; font-weight:800;'>${noMsg}</p>`;
+        return;
+      }
+
+      let sortedTx = [...transactions].reverse();
+      sortedTx.forEach(t => {
+        let isIncome = t.type === 'income';
+        let typeText = "";
+        if(currentLang === 'te') {
+          typeText = isIncome ? "రాబడి: +" : "ఖర్చు: -";
+        } else {
+          typeText = isIncome ? "வரவு: +" : "செலவு: -";
+        }
+
+        hDiv.innerHTML += `
+          <div style="background:rgba(255,255,255,0.95); border:1.5px solid #80deea; padding:12px; margin-bottom:10px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.06);">
+            <div style="display:flex; justify-content:space-between; font-weight:900; color:#004d40; margin-bottom:4px; font-size:13px;">
+              <span>📅 ${t.date} (${t.time})</span>
+              <span style="color: ${isIncome ? '#1b5e20' : '#c62828'};">
+                ${typeText}₹${t.amount}
+              </span>
+            </div>
+            <div style="font-size:13px; color:#212121; font-weight:800;">• ${t.desc}</div>
           </div>
         `;
       });
-      calculateTotal();
     }
 
-    function updateItemPrice(id, newPrice) {
-      let parsedPrice = newPrice !== "" ? parseFloat(newPrice) : 0;
-      let item = defaultItems.find(i => i.id === id);
-      
-      if(!userCart[id]) {
-        userCart[id] = { qty: 0, item: { ...item, price: parsedPrice } };
-      } else {
-        userCart[id].item.price = parsedPrice;
-      }
-      saveCartAndHistoryToFirebase();
-      calculateTotal();
-    }
-
-    function addCustomItem() {
-      let nameVal = document.getElementById('customInput').value.trim();
-      let priceVal = document.getElementById('customPrice').value;
-      let parsedPrice = priceVal !== "" ? parseFloat(priceVal) : 0;
-
-      if(nameVal !== "") {
-        let newId = 'custom_' + Date.now();
-        let newItem = { id: newId, ta: nameVal, te: nameVal, icon: "🛍️", price: parsedPrice };
-        defaultItems.push(newItem);
-        
-        userCart[newId] = { qty: 1, item: newItem };
-        
-        renderItems();
-        saveCartAndHistoryToFirebase();
-        document.getElementById('customInput').value = "";
-        document.getElementById('customPrice').value = "";
-      }
-    }
-
-    function deleteItem(id) {
-      defaultItems = defaultItems.filter(item => item.id !== id);
-      delete userCart[id];
-      renderItems();
-      saveCartAndHistoryToFirebase();
-    }
-
-    function updateQty(id, change) {
-      let item = defaultItems.find(i => i.id === id);
-      if(!userCart[id]) {
-        userCart[id] = { qty: 0, item: item };
-      }
-      userCart[id].qty += change;
-      if(userCart[id].qty <= 0) {
-        delete userCart[id];
-      }
-      renderItems();
-      saveCartAndHistoryToFirebase();
-    }
-
-    function calculateTotal() {
-      let totalQty = 0;
-      let totalPrice = 0;
-      for(let key in userCart) {
-        if(userCart[key]) {
-          totalQty += userCart[key].qty;
-          let p = userCart[key].item && userCart[key].item.price !== undefined ? userCart[key].item.price : 0;
-          totalPrice += userCart[key].qty * p;
-        }
-      }
-      let itemUnitText = currentLang === 'ta' ? 'பொருட்கள்' : 'వస్తువులు';
-      document.getElementById('totalCount').innerText = `${totalQty} ${itemUnitText} (₹${totalPrice})`;
-    }
-
-    function openTodaySummary() {
-      showScreen(4);
-      let sDiv = document.getElementById('todaySummaryList');
-      sDiv.innerHTML = "";
-      let grandTotal = 0;
-      let hasItems = false;
-
-      for(let key in userCart) {
-        let cartItem = userCart[key];
-        if(cartItem && cartItem.qty > 0) {
-          hasItems = true;
-          let itemName = (currentLang === 'ta') ? cartItem.item.ta : cartItem.item.te;
-          let itemPrice = cartItem.item.price !== undefined ? cartItem.item.price : 0;
-          let itemTotal = cartItem.qty * itemPrice;
-          grandTotal += itemTotal;
-
-          sDiv.innerHTML += `
-            <div class="item-row">
-              <div>
-                <strong>${cartItem.item.icon} ${itemName}</strong><br>
-                <span style="font-size:12px; color:#666;">₹${itemPrice} x ${cartItem.qty}</span>
-              </div>
-              <strong style="color:#2e7d32;">₹${itemTotal}</strong>
-            </div>
-          `;
-        }
-      }
-
-      if(!hasItems) {
-        let emptyMsg = currentLang === 'ta' ? "இன்று பொருட்கள் எதுவும் சேர்க்கப்படவில்லை." : "ఈరోజు వస్తువులు ఏవీ జోడించబడలేదు.";
-        sDiv.innerHTML = `<p style='text-align:center; color:#888;'>${emptyMsg}</p>`;
-      } else {
-        let totalTitle = currentLang === 'ta' ? "மொத்தத் தொகை:" : "మొత్తం ధర:";
-        sDiv.innerHTML += `
-          <style>
-            .summary-box { background: rgba(255,255,255,0.9); padding: 15px; border-radius: 12px; text-align: center; margin-top: 15px; border: 1px solid #ffcc80; }
-          </style>
-          <div class="summary-box">
-            <h3>${totalTitle} <span style="color:#2e7d32;">₹${grandTotal}</span></h3>
-          </div>
-        `;
-      }
-    }
-
-    // ஆப் ஸ்டார்ட் ஆகும் போது பெயர் ஏற்கனவே உள்ளதா என சரிபார்க்கும்
     if (currentUserName !== "") {
       setupUserSession();
     } else {
